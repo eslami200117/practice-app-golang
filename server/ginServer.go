@@ -6,6 +6,7 @@ import (
 
 	"github.com/gin-gonic/gin"
 	handler "rest.gtld.test/realTimeApp/app/handlers"
+	repository "rest.gtld.test/realTimeApp/app/repositories"
 	"rest.gtld.test/realTimeApp/app/usecases"
 
 	"rest.gtld.test/realTimeApp/config"
@@ -50,8 +51,10 @@ func (s *ginServer) Start() {
 }
 
 func (s *ginServer) initialWeatherHandler() {
-	weatherUsecase := usecases.NewWeatherUseImp()
+	weatherRepo := repository.NewWeatherPostgresRepo(s.db)
+	weatherUsecase := usecases.NewWeatherUseImp(weatherRepo)
 	weatherHandler := handler.NewWeatherHandler(weatherUsecase)
+
 	s.app.GET("/ws", func(c *gin.Context) {
 		conn, err := upgrader.Upgrade(c.Writer, c.Request, nil)
 		if err != nil {
@@ -60,7 +63,10 @@ func (s *ginServer) initialWeatherHandler() {
 			})
 			return
 		}
-
 		weatherHandler.HandleWebSocketConnection(conn)
+	})
+
+	s.app.GET("test", func(c *gin.Context) {
+		weatherHandler.HnadleUserRecPrc(c)
 	})
 }
