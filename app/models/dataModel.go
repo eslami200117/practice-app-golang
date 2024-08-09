@@ -25,4 +25,3 @@ func GenerateData() *Weather {
 		Rain:        randFloats(0, 100),
 	}
 }
-

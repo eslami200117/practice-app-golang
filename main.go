@@ -6,7 +6,7 @@ import (
 	"rest.gtld.test/realTimeApp/server"
 )
 
-func main(){
+func main() {
 	conf := config.GetConfig()
 	db := database.NewPostgresDatabase(conf)
 	router := server.NewGinServer(conf, db)

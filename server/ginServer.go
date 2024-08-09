@@ -44,8 +44,7 @@ func (s *ginServer) Start() {
 	s.app.Run(serverUrl)
 }
 
-
-func (s *ginServer) initialWeatherHandler(){
+func (s *ginServer) initialWeatherHandler() {
 	weatherUsecase := usecases.NewWeatherUseImp()
 	weatherHandler := handler.NewWeatherHandler(weatherUsecase)
 	s.app.GET("v1/health", func(c *gin.Context) {
