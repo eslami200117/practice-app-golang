@@ -5,5 +5,5 @@ import (
 )
 
 type WeatherUsecase interface {
-	WeatherDataProcessing(*model.Weather)
+	WeatherDataProcessing(*model.Weather) error
 }

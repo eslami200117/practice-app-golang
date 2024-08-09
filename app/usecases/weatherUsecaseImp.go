@@ -1,43 +1,88 @@
 package usecases
 
 import (
+	"container/ring"
+	"encoding/json"
+	"fmt"
 	"sync"
 
+	"rest.gtld.test/realTimeApp/app/entities"
 	"rest.gtld.test/realTimeApp/app/model"
+	repository "rest.gtld.test/realTimeApp/app/repositories"
 )
 
 type WeatherUsecaseImp struct {
-	weatherRepo []model.Weather
-	mu          sync.Mutex
+	weatherQueueRepo *ring.Ring
+	weatherRepo      *repository.WeatherPostgresRepo
+	mu               sync.Mutex
 }
 
-var wr []model.Weather
+var wr *ring.Ring = ring.New(1024)
 
-func NewWeatherUseImp() *WeatherUsecaseImp {
+func NewWeatherUseImp(weatherRepo *repository.WeatherPostgresRepo) *WeatherUsecaseImp {
 	return &WeatherUsecaseImp{
-		weatherRepo: wr,
-		mu:          sync.Mutex{},
+		weatherQueueRepo: wr,
+		weatherRepo:      weatherRepo,
+		mu:               sync.Mutex{},
 	}
 }
 
-func (wu *WeatherUsecaseImp) WeatherDataProcessing(w *model.Weather) {
+func (wu *WeatherUsecaseImp) WeatherDataProcessing(w *model.Weather) error {
+
+	insertWeatherData := &entities.WeatherEntity{
+		Longitude:   w.Longitude,
+		Latitude:    w.Latitude,
+		WindSpeed:   w.WindSpeed,
+		Temperature: w.Temperature,
+		Rain:        w.Rain,
+	}
+
+	if err := wu.weatherRepo.InserWeatherData(insertWeatherData); err != nil {
+		return err
+	}
+
 	wu.mu.Lock()
-	wu.weatherRepo = append(wu.weatherRepo, *w)
+	wu.weatherQueueRepo.Value = *w
+	wu.weatherQueueRepo = wu.weatherQueueRepo.Next()
 	wu.mu.Unlock()
+	return nil
+
 }
 
-func (wu WeatherUsecaseImp) RainProccesin(lng, lat float64) float64 {
+func (wu *WeatherUsecaseImp) RainProccesin(lng, lat float64) float64 {
 	i := 0.0
 	re := 0.0
-	for _, v := range wu.weatherRepo[(len(wu.weatherRepo) - 100):] {
-		if v.Longitude > (lng-5) && v.Longitude < (lng+5) {
-			if v.Latitude > (lng-5) && v.Latitude < (lng+5) {
-				re += v.Rain
-				i++
+	wu.mu.Lock()
+	wu.weatherQueueRepo.Do(func(p interface{}) {
+		if p != nil {
+			if v, ok := p.(model.Weather); ok {
+				if v.Longitude > (lng-5) && v.Longitude < (lng+5) {
+					if v.Latitude > (lat-5) && v.Latitude < (lat+5) { // Corrected to check Latitude
+						re += v.Rain
+						i++
+					}
+				}
 			}
 		}
-	}
-	re /= i
+	})
+	wu.mu.Unlock()
 
-	return re
+	if i == 0 {
+		return 0
+	}
+
+	return re / i
+}
+
+func (wu *WeatherUsecaseImp) LastValue() string {
+	lastValue := wu.weatherQueueRepo.Prev().Value
+	if lastValue == nil {
+		return "empy"
+	}
+	jsondata, err := json.Marshal(lastValue)
+	if err != nil {
+		fmt.Println("error in marshal last value", err)
+	}
+	return string(jsondata)
+	// return "empy2"
 }
