@@ -3,6 +3,7 @@ package handler
 import (
 	"encoding/json"
 	"net/http"
+	"strconv"
 
 	"github.com/gin-gonic/gin"
 	"github.com/gorilla/websocket"
@@ -34,7 +35,23 @@ func (w *weatherHandler) HandleWebSocketConnection(conn *websocket.Conn) {
 }
 
 func (w *weatherHandler) HnadleUserRecPrc(c *gin.Context) {
-	result := w.WeatherUsecaseImp.RainProccesin(0, 0)
+	lngStr := c.Query("lng")
+    latStr := c.Query("lat")
+
+    lng, err := strconv.ParseFloat(lngStr, 64)
+    if err != nil {
+        c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid longitude"})
+        return
+    }
+
+    lat, err := strconv.ParseFloat(latStr, 64)
+    if err != nil {
+        c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid latitude"})
+        return
+    }
+
+    result := w.WeatherUsecaseImp.RainProccesin(lng, lat)
+
 	c.JSON(http.StatusOK, gin.H{
 		"avr rain":   result,
 		"last value": w.WeatherUsecaseImp.LastValue(),
