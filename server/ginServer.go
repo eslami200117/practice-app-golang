@@ -38,6 +38,11 @@ func NewGinServer(conf *config.Config, db database.Database) Server {
 }
 
 func (s *ginServer) Start() {
+	s.app.GET("v1/health", func(c *gin.Context) {
+		c.JSON(http.StatusOK, gin.H{
+			"title": "Health care",
+		})
+	})
 
 	s.initialWeatherHandler()
 	serverUrl := fmt.Sprintf(":%d", s.conf.Server.Port)
@@ -47,11 +52,6 @@ func (s *ginServer) Start() {
 func (s *ginServer) initialWeatherHandler() {
 	weatherUsecase := usecases.NewWeatherUseImp()
 	weatherHandler := handler.NewWeatherHandler(weatherUsecase)
-	s.app.GET("v1/health", func(c *gin.Context) {
-		c.JSON(http.StatusOK, gin.H{
-			"title": "Health care",
-		})
-	})
 	s.app.GET("/ws", func(c *gin.Context) {
 		conn, err := upgrader.Upgrade(c.Writer, c.Request, nil)
 		if err != nil {
