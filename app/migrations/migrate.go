@@ -10,6 +10,7 @@ func main() {
 	conf := config.GetConfig()
 	db := database.NewPostgresDatabase(conf)
 	weatherMigrate(db)
+	nodeMigrate(db)
 }
 
 func weatherMigrate(db database.Database) {
@@ -25,15 +26,16 @@ func weatherMigrate(db database.Database) {
 	)
 }
 
-// func nodeMigrate(db database.Database) {
-// 	db.GetDb().Migrator().CreateTable(&entities.NodeEntity{})
+func nodeMigrate(db database.Database) {
+	db.GetDb().Migrator().CreateTable(&entities.Nodes{})
+	db.GetDb().Create(
+		&entities.Nodes{
+			Id: 1001,
+			Username: "test",
+			Password: "password",
+			Role: "worker",
+		},
+	)
 
-// 	db.GetDb().Create(
-// 		&entities.NodeEntity{
-// 			Id: 1000,
-// 			Username: "user",
-// 			Password: "password",
-// 			Role: "senior",
-// 		},
-// 	)
-// }
+
+}
