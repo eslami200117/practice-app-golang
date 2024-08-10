@@ -32,12 +32,6 @@ func NewGinServer(conf *config.Config, db database.Database) Server {
 }
 
 func (s *ginServer) Start() {
-	s.app.GET("v1/health", func(c *gin.Context) {
-		c.JSON(http.StatusOK, gin.H{
-			"title": "Health care",
-		})
-	})
-
 	s.initialWeatherHandler()
 	serverUrl := fmt.Sprintf(":%d", s.conf.Server.Port)
 	s.app.Run(serverUrl)
