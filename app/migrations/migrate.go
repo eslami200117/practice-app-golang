@@ -24,3 +24,15 @@ func weatherMigrate(db database.Database) {
 		},
 	)
 }
+
+func nodeMigrate(db database.Database) {
+	db.GetDb().Migrator().CreateTable(&entities.NodeEntity{})
+	db.GetDb().Create(
+		&entities.NodeEntity{
+			Id: 1000,
+			Username: "user",
+			Password: "password",
+			Role: "senior",
+		},
+	)
+}
