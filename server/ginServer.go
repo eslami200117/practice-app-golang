@@ -12,7 +12,6 @@ import (
 	"rest.gtld.test/realTimeApp/config"
 	"rest.gtld.test/realTimeApp/database"
 
-	"github.com/gorilla/websocket"
 )
 
 type ginServer struct {
@@ -21,12 +20,6 @@ type ginServer struct {
 	conf *config.Config
 }
 
-var upgrader = websocket.Upgrader{
-	CheckOrigin: func(r *http.Request) bool {
-		// Allow all connections
-		return true
-	},
-}
 
 func NewGinServer(conf *config.Config, db database.Database) Server {
 	ginApp := gin.Default()
@@ -59,14 +52,7 @@ func (s *ginServer) initialWeatherHandler() {
 	nodeHandler := handler.NewNodeHandler(nodeUsercase)
 
 	s.app.GET("/ws", func(c *gin.Context) {
-		conn, err := upgrader.Upgrade(c.Writer, c.Request, nil)
-		if err != nil {
-			c.JSON(http.StatusInternalServerError, gin.H{
-				"error": err.Error(),
-			})
-			return
-		}
-		weatherHandler.HandleWebSocketConnection(conn)
+		weatherHandler.HandleWebSocketConnection(c)
 	})
 
 	s.app.POST("/login", func(c *gin.Context){
