@@ -2,7 +2,7 @@ package server
 
 import (
 	"fmt"
-	
+
 	"github.com/gin-gonic/gin"
 	handler "rest.gtld.test/realTimeApp/app/handlers"
 	repository "rest.gtld.test/realTimeApp/app/repositories"
@@ -44,15 +44,7 @@ func (s *ginServer) initialWeatherHandler() {
 	nodeUsercase := usecases.NewNodeImp(repo)
 	nodeHandler := handler.NewNodeHandler(nodeUsercase)
 
-	s.app.GET("/ws", func(c *gin.Context) {
-		weatherHandler.HandleWebSocketConnection(c)
-	})
-
-	s.app.POST("/login", func(c *gin.Context){
-		nodeHandler.HnadleLogin(c)
-	})
-
-	s.app.GET("test", func(c *gin.Context) {
-		weatherHandler.HnadleUserRecPrc(c)
-	})
+	s.app.GET("/ws", weatherHandler.HandleWebSocketConnection)
+	s.app.POST("/login", nodeHandler.HnadleLogin)
+	s.app.GET("/test", weatherHandler.HnadleUserRecPrc)
 }
