@@ -2,8 +2,7 @@ package server
 
 import (
 	"fmt"
-	"net/http"
-
+	
 	"github.com/gin-gonic/gin"
 	handler "rest.gtld.test/realTimeApp/app/handlers"
 	repository "rest.gtld.test/realTimeApp/app/repositories"
