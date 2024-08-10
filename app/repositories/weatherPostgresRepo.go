@@ -2,6 +2,7 @@ package repository
 
 import (
 	"rest.gtld.test/realTimeApp/app/entities"
+	"rest.gtld.test/realTimeApp/app/model"
 	"rest.gtld.test/realTimeApp/database"
 )
 
@@ -21,4 +22,10 @@ func (pr *WeatherPostgresRepo) InserWeatherData(data *entities.WeatherEntity) er
 		return result.Error
 	}
 	return nil
+}
+
+func (pr *WeatherPostgresRepo) Authen(in *model.Login) bool{
+	var node model.Node
+	pr.db.GetDb().Find(&node, "username= ?", in.Username)
+	return node.Password == in.Password
 }
