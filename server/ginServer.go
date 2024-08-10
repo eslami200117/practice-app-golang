@@ -51,9 +51,12 @@ func (s *ginServer) Start() {
 }
 
 func (s *ginServer) initialWeatherHandler() {
-	weatherRepo := repository.NewWeatherPostgresRepo(s.db)
-	weatherUsecase := usecases.NewWeatherUseImp(weatherRepo)
+	repo := repository.NewWeatherPostgresRepo(s.db)
+	weatherUsecase := usecases.NewWeatherUseImp(repo)
 	weatherHandler := handler.NewWeatherHandler(weatherUsecase)
+
+	nodeUsercase := usecases.NewNodeImp(repo)
+	nodeHandler := handler.NewNodeHandler(nodeUsercase)
 
 	s.app.GET("/ws", func(c *gin.Context) {
 		conn, err := upgrader.Upgrade(c.Writer, c.Request, nil)
@@ -64,6 +67,10 @@ func (s *ginServer) initialWeatherHandler() {
 			return
 		}
 		weatherHandler.HandleWebSocketConnection(conn)
+	})
+
+	s.app.POST("/login", func(c *gin.Context){
+		nodeHandler.HnadleLogin(c)
 	})
 
 	s.app.GET("test", func(c *gin.Context) {
