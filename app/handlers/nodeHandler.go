@@ -23,7 +23,7 @@ func NewNodeHandler(nodeUsecase *usecases.NodeUsecaseImp)*nodeHandler{
 	}
 }
 
-func (n *nodeHandler) HnadleLogin(c *gin.Context, ){
+func (n *nodeHandler) HandleLogin(c *gin.Context){
 	var json model.Login
 	if err := c.ShouldBindJSON(&json); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
@@ -48,6 +48,6 @@ func (n *nodeHandler) HnadleLogin(c *gin.Context, ){
 	}
 }
 
-func (n nodeHandler) GetCurrenctUser(username string,user *model.Login){
-	n.nodeUsecaseImp.GetLoginUser(username, user)
+func (n nodeHandler) GetCurrenctNode(username string,user *model.Login){
+	n.nodeUsecaseImp.GetLoginNode(username, user)
 }

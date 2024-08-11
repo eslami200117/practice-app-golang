@@ -12,7 +12,7 @@ import (
 	"rest.gtld.test/realTimeApp/app/model"
 )
 
-func (n *nodeHandler)CheckAuthMiddleware(c *gin.Context) {
+func CheckAuthMiddleware(c *gin.Context, h handler) {
 
 	authHeader := c.GetHeader("Authorization")
 
@@ -56,7 +56,7 @@ func (n *nodeHandler)CheckAuthMiddleware(c *gin.Context) {
 	}
 
 	var login model.Login
-	n.GetCurrenctUser(claims["username"].(string), &login)
+	h.GetCurrenctNode(claims["username"].(string), &login)
 
 	if login.Username == "" {
 		c.AbortWithStatus(http.StatusUnauthorized)
