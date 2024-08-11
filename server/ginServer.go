@@ -51,9 +51,15 @@ func (s *ginServer) initialWeatherHandler() {
 		handler.CheckAuthMiddleware(c, nodeHandler)
 	}, weatherHandler.HandleWebSocketConnection)
 
-	s.app.GET("/test",func(c *gin.Context){
+	testRoute := s.app.Group("/test")
+	testRoute.Use(func(c *gin.Context){
 		handler.CheckAuthMiddleware(c, userHandler)
-	}, weatherHandler.HnadleUserRecPrc)
+	})
+	{
+		testRoute.GET("/prc", weatherHandler.HaddleUserRecPrc)
+		testRoute.GET("/list", weatherHandler.ListHandler)
+	}
+
 
 	s.app.POST("/loginnode", nodeHandler.HandleLogin)
 	s.app.POST("/loginuser", userHandler.HandleLogin)
