@@ -20,6 +20,7 @@ type WeatherUsecaseImp struct {
 var (
 	wr *ring.Ring = ring.New(1024)
 	ActiveNode = make(map[string]bool)
+	SelectedValue model.Weather
 )
 
 func NewWeatherUseImp(weatherRepo *repository.WeatherPostgresRepo) *WeatherUsecaseImp {

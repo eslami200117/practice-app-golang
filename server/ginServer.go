@@ -58,6 +58,7 @@ func (s *ginServer) initialWeatherHandler() {
 	{
 		testRoute.GET("/prc", weatherHandler.HaddleUserRecPrc)
 		testRoute.GET("/list", weatherHandler.ListHandler)
+		testRoute.GET("/node", weatherHandler.GetNodeHandler)
 	}
 
 

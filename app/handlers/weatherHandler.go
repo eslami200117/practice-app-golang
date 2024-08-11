@@ -2,7 +2,6 @@ package handler
 
 import (
 	"encoding/json"
-	"fmt"
 	"net/http"
 	"strconv"
 	"sync"
@@ -24,7 +23,10 @@ var upgrader = websocket.Upgrader{
 	},
 }
 
-var mu sync.Mutex
+var (
+	mu sync.Mutex
+	selectedNode string
+)
 
 func NewWeatherHandler(weatherUsecase *usecases.WeatherUsecaseImp) *weatherHandler {
 	return &weatherHandler{
@@ -55,6 +57,9 @@ func (w *weatherHandler) HandleWebSocketConnection(c *gin.Context) {
 			break
 		}
 		json.Unmarshal(message, &weather)
+		if userstring == selectedNode {
+			usecases.SelectedValue = weather
+		}
 		w.WeatherUsecaseImp.WeatherDataProcessing(&weather)
 	}
 	mu.Lock()
@@ -88,11 +93,23 @@ func (w *weatherHandler) HaddleUserRecPrc(c *gin.Context) {
 }
 
 func (u weatherHandler) ListHandler(c *gin.Context){
-	jsondata, err := json.Marshal(usecases.ActiveNode)
-	if err != nil{
-		fmt.Println("error in marshal", err)
-	}
+	// need modification
 	c.JSON(http.StatusOK, gin.H{
-		"nodes":   jsondata,
+		"nodes":	usecases.ActiveNode,
 	})
+}
+
+func (u weatherHandler) GetNodeHandler(c *gin.Context){
+	selectedNode := c.Query("node")
+
+	activitie, ok := usecases.ActiveNode[selectedNode]
+	if ok && activitie {
+		c.JSON(http.StatusOK, gin.H{
+			"data":	usecases.SelectedValue,
+		})
+	} else {
+		c.JSON(http.StatusNotFound, gin.H{
+			"error":	"unactive node",
+		})
+	}
 }
