@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"net/http"
 	"strconv"
+	"sync"
 
 	"github.com/gin-gonic/gin"
 	"github.com/gorilla/websocket"
@@ -22,6 +23,8 @@ var upgrader = websocket.Upgrader{
 	},
 }
 
+var mu sync.Mutex
+
 func NewWeatherHandler(weatherUsecase *usecases.WeatherUsecaseImp) *weatherHandler {
 	return &weatherHandler{
 		WeatherUsecaseImp: weatherUsecase,
@@ -36,6 +39,13 @@ func (w *weatherHandler) HandleWebSocketConnection(c *gin.Context) {
 		})
 		return
 	}
+	username, ok := c.Get("username")
+	userstring := username.(string)
+	if ok{
+		mu.Lock()
+		usecases.ActiveNode[userstring] = true
+		mu.Unlock()
+	}
 	for {
 		var weather model.Weather
 		_, message, err := conn.ReadMessage()
@@ -46,6 +56,9 @@ func (w *weatherHandler) HandleWebSocketConnection(c *gin.Context) {
 		json.Unmarshal(message, &weather)
 		w.WeatherUsecaseImp.WeatherDataProcessing(&weather)
 	}
+	mu.Lock()
+	usecases.ActiveNode[userstring] = false
+	mu.Unlock()
 }
 
 func (w *weatherHandler) HnadleUserRecPrc(c *gin.Context) {

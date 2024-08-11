@@ -17,7 +17,10 @@ type WeatherUsecaseImp struct {
 	mu               sync.Mutex
 }
 
-var wr *ring.Ring = ring.New(1024)
+var (
+	wr *ring.Ring = ring.New(1024)
+	ActiveNode = make(map[string]bool)
+)
 
 func NewWeatherUseImp(weatherRepo *repository.WeatherPostgresRepo) *WeatherUsecaseImp {
 	return &WeatherUsecaseImp{
