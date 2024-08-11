@@ -1,10 +1,15 @@
 package handler
 
 import (
+	"net/http"
+	"time"
+	"os"
+
 	"github.com/gin-gonic/gin"
+	"github.com/golang-jwt/jwt/v5"
+
 	"rest.gtld.test/realTimeApp/app/model"
 	"rest.gtld.test/realTimeApp/app/usecases"
-	"net/http"
 )
 
 
@@ -26,7 +31,18 @@ func (n *nodeHandler) HnadleLogin(c *gin.Context, ){
 	}
 	
 	if ok := n.NodeUsecaseImp.AuthenticateNode(c, &json); ok {
-		c.JSON(http.StatusOK, gin.H{"status": "you are logged in"})
+	
+		generateToken := jwt.NewWithClaims(jwt.SigningMethodHS256, jwt.MapClaims{
+			"username":  json.Username,
+			"exp": time.Now().Add(time.Hour * 2).Unix(),
+		})
+	
+		token, err := generateToken.SignedString([]byte(os.Getenv("SECRET")))
+	
+		if err != nil {
+			c.JSON(http.StatusBadRequest, gin.H{"error": "failed to generate token"})
+		}
+		c.JSON(http.StatusOK, gin.H{"token": token})
 	} else {
 		c.JSON(http.StatusUnauthorized, gin.H{"status": "not authorized"})
 	}

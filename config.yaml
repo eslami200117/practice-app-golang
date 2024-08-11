@@ -9,3 +9,4 @@ db:
   dbname: summertime
   sslmode: disable
   timezone: Asia/Tehran
+  SECRET: sectery-key

@@ -44,7 +44,7 @@ func (s *ginServer) initialWeatherHandler() {
 	nodeUsercase := usecases.NewNodeImp(repo)
 	nodeHandler := handler.NewNodeHandler(nodeUsercase)
 
-	s.app.GET("/ws", weatherHandler.HandleWebSocketConnection)
+	s.app.GET("/ws", nodeHandler.CheckAuthMiddleware, weatherHandler.HandleWebSocketConnection)
 	s.app.POST("/login", nodeHandler.HnadleLogin)
 	s.app.GET("/test", weatherHandler.HnadleUserRecPrc)
 }
