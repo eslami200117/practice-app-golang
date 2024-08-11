@@ -25,3 +25,7 @@ func (nu *NodeUsecaseImp) AuthenticateNode(c *gin.Context, in *model.Login) bool
 	// }
 	return result
 }
+
+func (nu *NodeUsecaseImp) GetLoginUser(username string, user *model.Login){
+	nu.nodeRepo.GetUser(username, user)
+}

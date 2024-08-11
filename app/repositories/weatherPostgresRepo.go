@@ -26,6 +26,13 @@ func (pr *WeatherPostgresRepo) InserWeatherData(data *entities.WeatherEntity) er
 
 func (pr *WeatherPostgresRepo) Authen(in *model.Login) bool{
 	var node model.Node
-	pr.db.GetDb().Find(&node, "username= ?", in.Username)
+	pr.db.GetDb().First(&node, "username= ?", in.Username)
 	return node.Password == in.Password
+}
+
+func (pr *WeatherPostgresRepo) GetUser(username string, user *model.Login){
+	var node model.Node 
+	pr.db.GetDb().Where("username=?", username).Find(&node)
+	user.Password = node.Password
+	user.Username = node.Username
 }
