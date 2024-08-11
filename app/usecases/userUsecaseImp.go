@@ -21,3 +21,7 @@ func (u UserUsecaseImp) AuthenticateUser(c *gin.Context, user *model.Login) bool
 	result := u.repo.AuthenUser(user)
 	return result
 }
+
+func (u UserUsecaseImp) GetLoginUser(username string, user *model.Login){
+	u.repo.GetUser(username, user)
+}

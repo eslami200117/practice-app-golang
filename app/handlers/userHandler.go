@@ -46,3 +46,7 @@ func (u userHandler) HandleLogin(c *gin.Context) {
 		c.JSON(http.StatusUnauthorized, gin.H{"status": "not authorized"})
 	}
 }
+
+func (u userHandler) GetCurrenct(username string, user *model.Login){
+	u.userUsecaseImp.GetLoginUser(username, user)
+}

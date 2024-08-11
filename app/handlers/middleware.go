@@ -56,12 +56,13 @@ func CheckAuthMiddleware(c *gin.Context, h handler) {
 	}
 
 	var login model.Login
-	h.GetCurrenctNode(claims["username"].(string), &login)
+	h.GetCurrenct(claims["username"].(string), &login)
 
 	if login.Username == "" {
 		c.AbortWithStatus(http.StatusUnauthorized)
 		return
 	}
+	c.Set("username", claims["username"].(string))
 
 	c.Next()
 

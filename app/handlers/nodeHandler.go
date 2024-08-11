@@ -48,6 +48,6 @@ func (n *nodeHandler) HandleLogin(c *gin.Context){
 	}
 }
 
-func (n nodeHandler) GetCurrenctNode(username string,user *model.Login){
+func (n nodeHandler) GetCurrenct(username string,user *model.Login){
 	n.nodeUsecaseImp.GetLoginNode(username, user)
 }
