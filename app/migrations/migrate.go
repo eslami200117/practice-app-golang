@@ -11,6 +11,7 @@ func main() {
 	db := database.NewPostgresDatabase(conf)
 	weatherMigrate(db)
 	nodeMigrate(db)
+	userMigrate(db)
 }
 
 func weatherMigrate(db database.Database) {
@@ -38,4 +39,16 @@ func nodeMigrate(db database.Database) {
 	)
 
 
+}
+
+
+func userMigrate(db database.Database){
+	db.GetDb().Migrator().CreateTable(&entities.User{})
+	db.GetDb().Create(
+		&entities.User{
+			Username: "admin",
+			Password: "password",
+			Role: "superviser",
+		},
+	)
 }
