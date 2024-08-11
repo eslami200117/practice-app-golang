@@ -100,7 +100,7 @@ func (u weatherHandler) ListHandler(c *gin.Context){
 }
 
 func (u weatherHandler) GetNodeHandler(c *gin.Context){
-	selectedNode := c.Query("node")
+	selectedNode = c.Query("node")
 
 	activitie, ok := usecases.ActiveNode[selectedNode]
 	if ok && activitie {
