@@ -14,12 +14,12 @@ import (
 
 
 type nodeHandler struct {
-	NodeUsecaseImp  *usecases.NodeUsecaseImp
+	nodeUsecaseImp  *usecases.NodeUsecaseImp
 }
 
 func NewNodeHandler(nodeUsecase *usecases.NodeUsecaseImp)*nodeHandler{
 	return &nodeHandler{
-		NodeUsecaseImp: nodeUsecase,
+		nodeUsecaseImp: nodeUsecase,
 	}
 }
 
@@ -30,7 +30,7 @@ func (n *nodeHandler) HnadleLogin(c *gin.Context, ){
 		return
 	}
 	
-	if ok := n.NodeUsecaseImp.AuthenticateNode(c, &json); ok {
+	if ok := n.nodeUsecaseImp.AuthenticateNode(c, &json); ok {
 	
 		generateToken := jwt.NewWithClaims(jwt.SigningMethodHS256, jwt.MapClaims{
 			"username":  json.Username,
@@ -46,4 +46,8 @@ func (n *nodeHandler) HnadleLogin(c *gin.Context, ){
 	} else {
 		c.JSON(http.StatusUnauthorized, gin.H{"status": "not authorized"})
 	}
+}
+
+func (n nodeHandler) GetCurrenctUser(username string, *model.Login){
+	n.nodeUsecaseImp.GetLoginUser(username, user)
 }

@@ -56,7 +56,7 @@ func (n *nodeHandler)CheckAuthMiddleware(c *gin.Context) {
 	}
 
 	var login model.Login
-	n.NodeUsecaseImp.GetLoginUser(claims["username"].(string), &login)
+	n.GetCurrenctUser(claims["username"].(string), &login)
 
 	if login.Username == "" {
 		c.AbortWithStatus(http.StatusUnauthorized)
