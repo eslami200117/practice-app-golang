@@ -2,6 +2,7 @@ package handler
 
 import (
 	"encoding/json"
+	"fmt"
 	"net/http"
 	"strconv"
 	"sync"
@@ -61,7 +62,7 @@ func (w *weatherHandler) HandleWebSocketConnection(c *gin.Context) {
 	mu.Unlock()
 }
 
-func (w *weatherHandler) HnadleUserRecPrc(c *gin.Context) {
+func (w *weatherHandler) HaddleUserRecPrc(c *gin.Context) {
 	lngStr := c.Query("lng")
     latStr := c.Query("lat")
 
@@ -84,4 +85,14 @@ func (w *weatherHandler) HnadleUserRecPrc(c *gin.Context) {
 		"last value": w.WeatherUsecaseImp.LastValue(),
 	})
 
+}
+
+func (u weatherHandler) ListHandler(c *gin.Context){
+	jsondata, err := json.Marshal(usecases.ActiveNode)
+	if err != nil{
+		fmt.Println("error in marshal", err)
+	}
+	c.JSON(http.StatusOK, gin.H{
+		"nodes":   jsondata,
+	})
 }
