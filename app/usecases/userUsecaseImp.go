@@ -31,3 +31,17 @@ func (u UserUsecaseImp) GetLoginUser(username string, user *model.Login){
 func (u UserUsecaseImp) UpdateLastLogin(username string, lastLoginTime time.Time){
 	u.repo.UpdateLastLogin(username, lastLoginTime)
 }
+
+func (u UserUsecaseImp) GetAllUser() []model.APIuser{
+	allUser := u.repo.GetAllUser()
+	var allAPIuser []model.APIuser
+	for _, u := range allUser{
+		value := model.APIuser{
+			Username: u.Username,
+			LastLogin: u.LastLogin,
+		}
+
+		allAPIuser = append(allAPIuser, value)
+	}
+	return allAPIuser
+}
