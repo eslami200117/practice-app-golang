@@ -1,6 +1,8 @@
 package usecases
 
 import (
+	"time"
+
 	"github.com/gin-gonic/gin"
 	"rest.gtld.test/realTimeApp/app/model"
 	repository "rest.gtld.test/realTimeApp/app/repositories"
@@ -24,4 +26,8 @@ func (u UserUsecaseImp) AuthenticateUser(c *gin.Context, user *model.Login) bool
 
 func (u UserUsecaseImp) GetLoginUser(username string, user *model.Login){
 	u.repo.GetUser(username, user)
+}
+
+func (u UserUsecaseImp) UpdateLastLogin(username string, lastLoginTime time.Time){
+	u.repo.UpdateLastLogin(username, lastLoginTime)
 }

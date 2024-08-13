@@ -1,6 +1,8 @@
 package repository
 
 import (
+	"time"
+
 	"rest.gtld.test/realTimeApp/app/entities"
 	"rest.gtld.test/realTimeApp/app/model"
 	"rest.gtld.test/realTimeApp/database"
@@ -55,4 +57,11 @@ func (pr *WeatherPostgresRepo) UpdateNodeStatus(username string, status bool){
 	pr.db.GetDb().First(&node, "username= ?", username)
 	node.Status = status
 	pr.db.GetDb().Save(&node)
+}
+
+func (pr *WeatherPostgresRepo) UpdateLastLogin(username string, lastLoginTime time.Time) {
+	var user model.User
+	pr.db.GetDb().First(&user, "username= ?", username)
+	user.LastLogin = lastLoginTime
+	pr.db.GetDb().Save(&user)
 }
