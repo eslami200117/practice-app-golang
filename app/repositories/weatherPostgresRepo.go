@@ -53,7 +53,7 @@ func (pr *WeatherPostgresRepo) AuthenUser(in *model.Login) bool {
 }
 
 func (pr *WeatherPostgresRepo) UpdateNodeStatus(username string, status bool){
-	var node model.Node
+	var node entities.Nodes
 	pr.db.GetDb().First(&node, "username= ?", username)
 	node.Status = status
 	pr.db.GetDb().Save(&node)
