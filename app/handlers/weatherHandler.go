@@ -49,6 +49,8 @@ func (w *weatherHandler) HandleWebSocketConnection(c *gin.Context) {
 		usecases.ActiveNode[userstring] = true
 		mu.Unlock()
 	}
+	w.WeatherUsecaseImp.UpdateNodeStatus(userstring, true)
+
 	for {
 		var weather model.Weather
 		_, message, err := conn.ReadMessage()
@@ -62,6 +64,8 @@ func (w *weatherHandler) HandleWebSocketConnection(c *gin.Context) {
 		}
 		w.WeatherUsecaseImp.WeatherDataProcessing(&weather)
 	}
+
+	w.WeatherUsecaseImp.UpdateNodeStatus(userstring, false)
 	mu.Lock()
 	usecases.ActiveNode[userstring] = false
 	mu.Unlock()

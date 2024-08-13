@@ -90,3 +90,8 @@ func (wu *WeatherUsecaseImp) LastValue() string {
 	return string(jsondata)
 	// return "empy2"
 }
+
+
+func (wu *WeatherUsecaseImp) UpdateNodeStatus(username string, status bool) {
+	wu.weatherRepo.UpdateNodeStatus(username, status)
+}

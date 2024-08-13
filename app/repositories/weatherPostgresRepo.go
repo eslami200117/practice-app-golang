@@ -44,8 +44,15 @@ func (pr *WeatherPostgresRepo) GetUser(username string, log *model.Login){
 	log.Username = user.Username
 }
 
-func (pr * WeatherPostgresRepo) AuthenUser(in *model.Login) bool {
+func (pr *WeatherPostgresRepo) AuthenUser(in *model.Login) bool {
 	var user model.User
 	pr.db.GetDb().First(&user, "username= ?", in.Username)
 	return user.Password == in.Password
+}
+
+func (pr *WeatherPostgresRepo) UpdateNodeStatus(username string, status bool){
+	var node model.Node
+	pr.db.GetDb().First(&node, "username= ?", username)
+	node.Status = status
+	pr.db.GetDb().Save(&node)
 }
