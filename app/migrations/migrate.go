@@ -35,6 +35,7 @@ func nodeMigrate(db database.Database) {
 			Username: "test",
 			Password: "password",
 			Role: "worker",
+			Status: false,
 		},
 	)
 
