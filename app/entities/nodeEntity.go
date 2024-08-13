@@ -13,6 +13,6 @@ type (
 		Role 		string 		`json:"role"`
 		Status 		bool 		`json:"status"`
 		CreateAt 	time.Time 	`json:"createAt"`
-		UpdateAt	time.Time 	`json:"updateAt"`
+		LastUpdata	time.Time 	`json:"lastUpdata"`
 	}
 )

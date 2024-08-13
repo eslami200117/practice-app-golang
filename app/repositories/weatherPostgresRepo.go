@@ -56,6 +56,7 @@ func (pr *WeatherPostgresRepo) UpdateNodeStatus(username string, status bool){
 	var node entities.Nodes
 	pr.db.GetDb().First(&node, "username= ?", username)
 	node.Status = status
+	node.LastUpdata = time.Now()
 	pr.db.GetDb().Save(&node)
 }
 

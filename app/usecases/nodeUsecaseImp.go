@@ -38,7 +38,7 @@ func (nu *NodeUsecaseImp) GetAllNode() [] model.APInode{
 		value := model.APInode{
 			Username: n.Username,
 			Status: n.Status,
-			LastUpdate: n.UpdateAt,
+			LastUpdate: n.LastUpdata,
 		}
 		allAPInode = append(allAPInode, value)
 	}
