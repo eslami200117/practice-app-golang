@@ -38,7 +38,7 @@ func (u UserUsecaseImp) GetAllUser() []model.APIuser{
 	for _, u := range allUser{
 		value := model.APIuser{
 			Username: u.Username,
-			LastLogin: u.LastLogin,
+			LastLogin: timeAgo(u.LastLogin),
 		}
 
 		allAPIuser = append(allAPIuser, value)
