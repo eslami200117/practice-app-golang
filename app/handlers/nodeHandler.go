@@ -51,3 +51,14 @@ func (n *nodeHandler) HandleLogin(c *gin.Context){
 func (n nodeHandler) GetCurrenct(username string,user *model.Login){
 	n.nodeUsecaseImp.GetLoginNode(username, user)
 }
+
+func (n nodeHandler) NodeListHandler(c *gin.Context) {
+	allNode := n.nodeUsecaseImp.GetAllNode()
+
+	c.JSON(
+		http.StatusOK,
+		gin.H{
+			"nodes": allNode,
+		},
+	)
+}

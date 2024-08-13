@@ -67,6 +67,7 @@ func (s *ginServer) initialWeatherHandler() {
 	})
 	{
 		adminRoute.GET("/userList", userHandler.UsersListHandler)
+		adminRoute.GET("/nodeList", nodeHandler.NodeListHandler)
 	}
 
 

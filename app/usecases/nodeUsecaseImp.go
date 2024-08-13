@@ -29,3 +29,18 @@ func (nu *NodeUsecaseImp) AuthenticateNode(c *gin.Context, in *model.Login) bool
 func (nu *NodeUsecaseImp) GetLoginNode(username string, user *model.Login){
 	nu.nodeRepo.GetNode(username, user)
 }
+
+func (nu *NodeUsecaseImp) GetAllNode() [] model.APInode{
+	allNode := nu.nodeRepo.GetAllNode()
+	var allAPInode []model.APInode
+
+	for _, n := range allNode{
+		value := model.APInode{
+			Username: n.Username,
+			Status: n.Status,
+			LastUpdate: n.UpdateAt,
+		}
+		allAPInode = append(allAPInode, value)
+	}
+	return allAPInode
+}
