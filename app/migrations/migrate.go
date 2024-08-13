@@ -1,6 +1,8 @@
 package main
 
 import (
+	"time"
+
 	"rest.gtld.test/realTimeApp/app/entities"
 	"rest.gtld.test/realTimeApp/config"
 	"rest.gtld.test/realTimeApp/database"
@@ -50,6 +52,7 @@ func userMigrate(db database.Database){
 			Username: "admin",
 			Password: "password",
 			Role: "superviser",
+			LastLogin: time.Now(),
 		},
 	)
 }
