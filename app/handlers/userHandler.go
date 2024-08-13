@@ -22,7 +22,7 @@ func NewUserHanlder(userUsecase * usecases.UserUsecaseImp) *userHandler {
 	}
 }
 
-func (u userHandler) HandleLogin(c *gin.Context) {
+func (u *userHandler) HandleLogin(c *gin.Context) {
 	var json model.Login
 	if err := c.ShouldBindJSON(&json); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
@@ -48,6 +48,13 @@ func (u userHandler) HandleLogin(c *gin.Context) {
 	u.userUsecaseImp.UpdateLastLogin(json.Username, time.Now())
 }
 
-func (u userHandler) GetCurrenct(username string, user *model.Login){
+func (u *userHandler) GetCurrenct(username string, user *model.Login){
 	u.userUsecaseImp.GetLoginUser(username, user)
+}
+
+func (u *userHandler) UsersListHandler(c *gin.Context) {
+	listOfUsers := u.userUsecaseImp.GetAllUser()
+	c.JSON(http.StatusOK, gin.H{
+		"users": listOfUsers,
+	})
 }

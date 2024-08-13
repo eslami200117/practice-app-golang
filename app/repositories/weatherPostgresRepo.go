@@ -60,8 +60,22 @@ func (pr *WeatherPostgresRepo) UpdateNodeStatus(username string, status bool){
 }
 
 func (pr *WeatherPostgresRepo) UpdateLastLogin(username string, lastLoginTime time.Time) {
-	var user model.User
+	var user entities.User
 	pr.db.GetDb().First(&user, "username= ?", username)
 	user.LastLogin = lastLoginTime
 	pr.db.GetDb().Save(&user)
+}
+
+func (pr *WeatherPostgresRepo) GetAllUser() []entities.User {
+	var allUser []entities.User
+
+	pr.db.GetDb().Find(&allUser)
+	return allUser
+}
+
+func (pr *WeatherPostgresRepo) GetAllNode() []entities.Nodes {
+	var allNode []entities.Nodes
+
+	pr.db.GetDb().Find(&allNode)
+	return allNode
 }
