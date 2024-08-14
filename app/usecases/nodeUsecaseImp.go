@@ -44,3 +44,7 @@ func (nu *NodeUsecaseImp) GetAllNode() [] model.APInode{
 	}
 	return allAPInode
 }
+
+func (nu *NodeUsecaseImp) AddSource(username string, addSource string, password string) {
+	nu.nodeRepo.AddSource(username, addSource, password)
+}

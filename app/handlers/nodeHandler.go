@@ -53,11 +53,11 @@ func (n *nodeHandler) HandleLogin(c *gin.Context){
 	}
 }
 
-func (n nodeHandler) GetCurrenct(username string,user *model.Login){
+func (n *nodeHandler) GetCurrenct(username string, user *model.Login){
 	n.nodeUsecaseImp.GetLoginNode(username, user)
 }
 
-func (n nodeHandler) NodeListHandler(c *gin.Context) {
+func (n *nodeHandler) NodeListHandler(c *gin.Context) {
 	allNode := n.nodeUsecaseImp.GetAllNode()
 
 	c.JSON(
@@ -66,4 +66,18 @@ func (n nodeHandler) NodeListHandler(c *gin.Context) {
 			"nodes": allNode,
 		},
 	)
+}
+
+func (n *nodeHandler) AddSourceHandler(c *gin.Context) {
+	var addSource struct {
+		Username string
+		AddSource	string
+		Password string
+	}
+
+	if err := c.ShouldBindJSON(&addSource); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}
+	n.nodeUsecaseImp.AddSource(addSource.Username, addSource.AddSource, addSource.Password)
 }

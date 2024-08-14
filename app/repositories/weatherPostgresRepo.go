@@ -97,3 +97,15 @@ func (pr *WeatherPostgresRepo) AddUser(username string, password string) {
 		},
 	)
 }
+
+func (pr *WeatherPostgresRepo) AddSource(username string, addSource string, password string){
+	pr.db.GetDb().Create(
+		&entities.Nodes{
+			Username: username,
+			Password: password,
+			Role: "worker",
+			Status: false,
+			LastUpdata: time.Now(),
+		},
+	)
+}
