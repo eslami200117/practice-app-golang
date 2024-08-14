@@ -79,5 +79,6 @@ func (n *nodeHandler) AddSourceHandler(c *gin.Context) {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
-	n.nodeUsecaseImp.AddSource(addSource.Username, addSource.AddSource, addSource.Password)
+
+	n.nodeUsecaseImp.AddSource(addSource.AddSource, addSource.Password)
 }

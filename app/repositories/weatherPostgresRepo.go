@@ -3,6 +3,7 @@ package repository
 import (
 	"time"
 
+	// "golang.org/x/exp/rand"
 	"rest.gtld.test/realTimeApp/app/entities"
 	"rest.gtld.test/realTimeApp/app/model"
 	"rest.gtld.test/realTimeApp/database"
@@ -98,10 +99,10 @@ func (pr *WeatherPostgresRepo) AddUser(username string, password string) {
 	)
 }
 
-func (pr *WeatherPostgresRepo) AddSource(username string, addSource string, password string){
+func (pr *WeatherPostgresRepo) AddSource(addSource string, password string){
 	pr.db.GetDb().Create(
 		&entities.Nodes{
-			Username: username,
+			Username: addSource,
 			Password: password,
 			Role: "worker",
 			Status: false,
