@@ -50,6 +50,6 @@ func (u *UserUsecaseImp) IsAdmin(username string) bool {
 	return u.repo.IsAdmin(username)
 }
 
-func (u *UserUsecaseImp) AddUser (username string, password string) {
-	u.repo.AddUser(username, password)
+func (u *UserUsecaseImp) AddUser (username string, password string) error{
+	return u.repo.AddUser(username, password)
 }

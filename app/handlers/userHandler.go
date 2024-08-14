@@ -84,6 +84,10 @@ func (u *userHandler) AddUserHandler(c *gin.Context) {
 		return
 	}
 
-	u.userUsecaseImp.AddUser(addUser.AddUser, addUser.Password)
+	err := u.userUsecaseImp.AddUser(addUser.AddUser, addUser.Password)
+	if err != nil{
+		c.JSON(http.StatusBadRequest, gin.H{
+			"error": err.Error()})
+	}
 
 }

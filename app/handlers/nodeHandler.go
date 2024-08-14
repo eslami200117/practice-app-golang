@@ -77,8 +77,12 @@ func (n *nodeHandler) AddSourceHandler(c *gin.Context) {
 
 	if err := c.ShouldBindJSON(&addSource); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
-		return
+		return 
 	}
 
-	n.nodeUsecaseImp.AddSource(addSource.AddSource, addSource.Password)
+	err := n.nodeUsecaseImp.AddSource(addSource.AddSource, addSource.Password)
+	if err != nil{
+		c.JSON(http.StatusBadRequest, gin.H{
+			"error": err.Error()})
+	}
 }

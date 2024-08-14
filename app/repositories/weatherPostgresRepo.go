@@ -1,9 +1,11 @@
 package repository
 
 import (
+	"errors"
 	"time"
 
 	// "golang.org/x/exp/rand"
+	"gorm.io/gorm"
 	"rest.gtld.test/realTimeApp/app/entities"
 	"rest.gtld.test/realTimeApp/app/model"
 	"rest.gtld.test/realTimeApp/database"
@@ -88,25 +90,42 @@ func (pr *WeatherPostgresRepo) IsAdmin(username string) bool {
 	return user.Role == "superviser" 
 }
 
-func (pr *WeatherPostgresRepo) AddUser(username string, password string) {
-	pr.db.GetDb().Create(
-		&entities.User{
-			Username: username,
-			Password: password,
-			Role: "employee",
-			LastLogin: time.Now(),
-		},
-	)
+
+func (pr *WeatherPostgresRepo) AddUser(username string, password string) error {
+	var user entities.User
+
+	if err := pr.db.GetDb().Where("username = ?", username).First(&user).Error; err == nil {
+		return errors.New("user already exists")
+	} else if err != gorm.ErrRecordNotFound {
+		return err
+	}
+
+	err := pr.db.GetDb().Create(&entities.User{
+		Username:  username,
+		Password:  password,
+		Role:      "employee",
+		LastLogin: time.Now(),
+	}).Error
+
+	return err
 }
 
-func (pr *WeatherPostgresRepo) AddSource(addSource string, password string){
-	pr.db.GetDb().Create(
-		&entities.Nodes{
-			Username: addSource,
-			Password: password,
-			Role: "worker",
-			Status: false,
-			LastUpdata: time.Now(),
-		},
-	)
+func (pr *WeatherPostgresRepo) AddSource(addSource string, password string) error {
+	var node entities.Nodes
+
+	if err := pr.db.GetDb().Where("username = ?", addSource).First(&node).Error; err == nil {
+		return errors.New("source already exists")
+	} else if err != gorm.ErrRecordNotFound {
+		return err 
+	}
+
+	err := pr.db.GetDb().Create(&entities.Nodes{
+		Username:  addSource,
+		Password:  password,
+		Role:      "worker",
+		Status:    false,
+		LastUpdata: time.Now(),
+	}).Error
+
+	return err
 }
