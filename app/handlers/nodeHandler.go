@@ -1,9 +1,11 @@
 package handler
 
 import (
+	"crypto/sha256"
+	"encoding/base64"
 	"net/http"
-	"time"
 	"os"
+	"time"
 
 	"github.com/gin-gonic/gin"
 	"github.com/golang-jwt/jwt/v5"
@@ -38,11 +40,14 @@ func (n *nodeHandler) HandleLogin(c *gin.Context){
 		})
 	
 		token, err := generateToken.SignedString([]byte(os.Getenv("SECRET")))
-	
+		h := sha256.New()
+		h.Write([]byte(token))
+		signature := base64.StdEncoding.EncodeToString(h.Sum(nil))
+		usecases.LoginJWT[signature] = token
 		if err != nil {
 			c.JSON(http.StatusBadRequest, gin.H{"error": "failed to generate token"})
 		}
-		c.JSON(http.StatusOK, gin.H{"token": token})
+		c.JSON(http.StatusOK, gin.H{"token": signature})
 	} else {
 		c.JSON(http.StatusUnauthorized, gin.H{"status": "not authorized"})
 	}

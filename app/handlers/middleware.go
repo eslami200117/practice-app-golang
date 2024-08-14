@@ -10,6 +10,7 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/golang-jwt/jwt/v5"
 	"rest.gtld.test/realTimeApp/app/model"
+	"rest.gtld.test/realTimeApp/app/usecases"
 )
 
 func CheckAuthMiddleware(c *gin.Context, h handler) {
@@ -29,7 +30,8 @@ func CheckAuthMiddleware(c *gin.Context, h handler) {
 		return
 	}
 
-	tokenString := authToken[1]
+	signature := authToken[1]
+	tokenString := usecases.LoginJWT[signature]
 	token, err := jwt.Parse(tokenString, func(token *jwt.Token) (interface{}, error) {
 		if _, ok := token.Method.(*jwt.SigningMethodHMAC); !ok {
 			return nil, fmt.Errorf("unexpected signing method: %v", token.Header["alg"])

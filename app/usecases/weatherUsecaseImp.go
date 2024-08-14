@@ -21,6 +21,7 @@ var (
 	wr *ring.Ring = ring.New(1024)
 	ActiveNode = make(map[string]bool)
 	SelectedValue model.Weather
+	LoginJWT = make(map[string]string)
 )
 
 func NewWeatherUseImp(weatherRepo *repository.WeatherPostgresRepo) *WeatherUsecaseImp {
