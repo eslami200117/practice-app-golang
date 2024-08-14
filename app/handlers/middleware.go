@@ -65,6 +65,7 @@ func CheckAuthMiddleware(c *gin.Context, h handler) {
 		return
 	}
 	c.Set("username", claims["username"].(string))
+	c.Set("signature", signature)
 
 	c.Next()
 

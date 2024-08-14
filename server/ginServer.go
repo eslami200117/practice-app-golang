@@ -59,6 +59,7 @@ func (s *ginServer) initialWeatherHandler() {
 		testRoute.GET("/prc", weatherHandler.HaddleUserRecPrc)
 		testRoute.GET("/list", weatherHandler.ListHandler)
 		testRoute.GET("/node", weatherHandler.GetNodeHandler)
+		testRoute.GET("/logout", weatherHandler.LogoutHandler)
 	}
 
 	adminRoute := s.app.Group("/admin")

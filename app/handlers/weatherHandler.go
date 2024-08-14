@@ -117,3 +117,13 @@ func (u weatherHandler) GetNodeHandler(c *gin.Context){
 		})
 	}
 }
+
+func (u weatherHandler) LogoutHandler(c *gin.Context){
+	signature, ok := c.Get("signature")
+	var sigStr string
+	if ok {
+		sigStr = signature.(string)
+	}
+
+	usecases.LoginJWT[sigStr] = ""
+}
