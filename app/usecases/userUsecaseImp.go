@@ -19,20 +19,20 @@ func NewUserImp(repo *repository.WeatherPostgresRepo) *UserUsecaseImp{
 	}
 }
 
-func (u UserUsecaseImp) AuthenticateUser(c *gin.Context, user *model.Login) bool {
+func (u *UserUsecaseImp) AuthenticateUser(c *gin.Context, user *model.Login) bool {
 	result := u.repo.AuthenUser(user)
 	return result
 }
 
-func (u UserUsecaseImp) GetLoginUser(username string, user *model.Login){
+func (u *UserUsecaseImp) GetLoginUser(username string, user *model.Login){
 	u.repo.GetUser(username, user)
 }
 
-func (u UserUsecaseImp) UpdateLastLogin(username string, lastLoginTime time.Time){
+func (u *UserUsecaseImp) UpdateLastLogin(username string, lastLoginTime time.Time){
 	u.repo.UpdateLastLogin(username, lastLoginTime)
 }
 
-func (u UserUsecaseImp) GetAllUser() []model.APIuser{
+func (u *UserUsecaseImp) GetAllUser() []model.APIuser{
 	allUser := u.repo.GetAllUser()
 	var allAPIuser []model.APIuser
 	for _, u := range allUser{
@@ -44,4 +44,12 @@ func (u UserUsecaseImp) GetAllUser() []model.APIuser{
 		allAPIuser = append(allAPIuser, value)
 	}
 	return allAPIuser
+}
+
+func (u *UserUsecaseImp) IsAdmin(username string) bool {
+	return u.repo.IsAdmin(username)
+}
+
+func (u *UserUsecaseImp) AddUser (username string, password string) {
+	u.repo.AddUser(username, password)
 }

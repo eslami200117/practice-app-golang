@@ -66,16 +66,24 @@ func (u *userHandler) UsersListHandler(c *gin.Context) {
 
 func (u *userHandler) AddUserHandler(c *gin.Context) {
 	var addUser struct {
-		username string
-		addUser	string
-		password string
+		Username string
+		AddUser	string
+		Password string
 	}
 
 	if err := c.ShouldBindJSON(&addUser); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
+	adminUsername := addUser.Username
 
-	
+	if u.userUsecaseImp.IsAdmin(adminUsername) {
+
+	} else {
+		c.JSON(http.StatusUnauthorized, gin.H{"error": "you are not admin"})
+		return
+	}
+
+	u.userUsecaseImp.AddUser(addUser.AddUser, addUser.Password)
 
 }

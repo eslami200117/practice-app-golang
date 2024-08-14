@@ -80,3 +80,20 @@ func (pr *WeatherPostgresRepo) GetAllNode() []entities.Nodes {
 	pr.db.GetDb().Find(&allNode)
 	return allNode
 }
+
+func (pr *WeatherPostgresRepo) IsAdmin(username string) bool {
+	var user entities.User
+	pr.db.GetDb().First(&user, "username= ?", username)
+	return user.Role == "superviser" 
+}
+
+func (pr *WeatherPostgresRepo) AddUser(username string, password string) {
+	pr.db.GetDb().Create(
+		&entities.User{
+			Username: username,
+			Password: password,
+			Role: "employee",
+			LastLogin: time.Now(),
+		},
+	)
+}
