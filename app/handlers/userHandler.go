@@ -63,3 +63,19 @@ func (u *userHandler) UsersListHandler(c *gin.Context) {
 		"users": listOfUsers,
 	})
 }
+
+func (u *userHandler) AddUserHandler(c *gin.Context) {
+	var addUser struct {
+		username string
+		addUser	string
+		password string
+	}
+
+	if err := c.ShouldBindJSON(&addUser); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}
+
+	
+
+}

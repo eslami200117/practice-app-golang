@@ -126,4 +126,7 @@ func (u weatherHandler) LogoutHandler(c *gin.Context){
 	}
 
 	usecases.LoginJWT[sigStr] = ""
+	c.JSON(http.StatusOK, gin.H{
+		"msg": "logout successfuly",
+	})
 }
