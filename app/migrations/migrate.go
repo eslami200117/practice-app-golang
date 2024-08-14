@@ -33,7 +33,6 @@ func nodeMigrate(db database.Database) {
 	db.GetDb().Migrator().CreateTable(&entities.Nodes{})
 	db.GetDb().Create(
 		&entities.Nodes{
-			Id: 1001,
 			Username: "test",
 			Password: "password",
 			Role: "worker",
