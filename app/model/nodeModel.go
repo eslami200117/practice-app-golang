@@ -4,7 +4,7 @@ import "time"
 
 
 type Node struct {
-    Id          uint        `json:"id"`
+    // Id          uint        `json:"id"`
     Username    string      `json:"username"`
     Password    string      `json:"-"`
 	Role 	    string      `json:"role"`

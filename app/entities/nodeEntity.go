@@ -7,7 +7,7 @@ import (
 
 type (
 	Nodes struct {
-		Username 	string 		`json:"username"`
+		Username 	string 		`json:"username" gorm:"primaryKey"`
 		Password 	string 		`json:"password"`
 		Role 		string 		`json:"role"`
 		Status 		bool 		`json:"status"`
